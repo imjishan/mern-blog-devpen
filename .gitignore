@@ -22,7 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.env
 
 
 # Contentlayer
 .contentlayer
+notes.txt
