@@ -22,7 +22,7 @@ export const signup = async (request, response) => {
   const newUser = new User({
     username,
     email,
-    hashPassword,
+    password: hashPassword,
   });
 
   try {
