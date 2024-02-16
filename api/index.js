@@ -21,3 +21,13 @@ app.listen(3000, () => {
 // and to simplify the code and not to get messy we have created a file (controllers)
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+
+app.use((error, request, response, next) => {
+  const statusCode = error.statusCode || 500;
+  const message = error.message;
+  response.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
