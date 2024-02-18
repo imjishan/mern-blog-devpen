@@ -21,7 +21,7 @@ const Signup = () => {
         {/* left side */}
         <div className="flex-1">
           <Link to="/" className="font-bold dark:text-white text-4xl">
-            <span className="px-2 py-1 bg-gradient-to-r from-sky-700 via-purple-600 to-pink-900 rounded-lg text-white">
+            <span className="px-2 py-1 bg-neutral-900 rounded-lg text-white">
               Jishan
             </span>
             Blog
