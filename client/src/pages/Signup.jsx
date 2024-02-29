@@ -1,19 +1,39 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setformData] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleChange = (e) => {
-    setformData({ ...formData, [e.target.id]: e.target.value });
+    setformData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   const res = await fetch("/api/auth/sign")
-    // } catch (error) {
-
-    // }
+    if (!formData.username || !formData.email || !formData.password)
+      return setErrorMessage("Please fill out all fields!");
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return setErrorMessage(data.message);
+      }
+      setLoading(false);
+      if (res.ok) {
+        navigate("/signin");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+      setLoading(false);
+    }
   };
   return (
     <div className="min-h-screen mt-20">
@@ -62,7 +82,16 @@ const Signup = () => {
                 onChange={handleChange}
               />
             </div>
-            <Button color="dark">Sign Up</Button>
+            <Button type="submit" color="dark" disabled={Loading}>
+              {Loading ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Sign up"
+              )}
+            </Button>
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Have an account?</span>
@@ -70,6 +99,11 @@ const Signup = () => {
               Sign In
             </Link>
           </div>
+          {errorMessage && (
+            <Alert className="mt-5" color="failure">
+              {errorMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
